@@ -7,8 +7,11 @@ EXTRN WriteConsoleA: PROC
 
 .code
 
-MAIN proc
-    sub rsp, 28h                ; Some stack?
+CONOUT proc
+    mov rdx, rcx
+    mov r8, rdx
+    mov rcx, -11
+    call GetStdHandle
     mov rcx, -11
     call GetStdHandle
     ;BOOL WriteConsoleA
@@ -18,13 +21,19 @@ MAIN proc
     ; LPDWORD lpNumberOfCharsWritten(r9),
     ; LPVOID lpReserved)
     mov rcx, rax
-    lea rdx, hello
-    mov r8, 3
     xor r9, r9
     push 0
     call WriteConsoleA
     ; add esp, 4
     add rsp, 8
+    ret
+CONOUT endp
+
+MAIN proc
+    sub rsp, 28h                ; Some stack?
+    lea rcx, hello
+    mov rdx, 7
+    call CONOUT
     ;add rsp, 28h
     xor rcx, rcx                ; return 0
     call ExitProcess

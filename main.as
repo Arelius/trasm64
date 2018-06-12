@@ -1,4 +1,5 @@
 EXTRN ExitProcess: PROC
+EXTRN AllocConsole: PROC
 EXTRN GetStdHandle: PROC
 EXTRN WriteConsoleA: PROC
 
@@ -8,10 +9,11 @@ EXTRN WriteConsoleA: PROC
 .code
 
 CONOUT proc
-    mov rdx, rcx
+    sub rsp, 8 ; numberofcarswritten
+    mov r9, rsp
+    sub rsp, 40
     mov r8, rdx
-    mov rcx, -11
-    call GetStdHandle
+    mov rdx, rcx
     mov rcx, -11
     call GetStdHandle
     ;BOOL WriteConsoleA
@@ -21,18 +23,18 @@ CONOUT proc
     ; LPDWORD lpNumberOfCharsWritten(r9),
     ; LPVOID lpReserved)
     mov rcx, rax
-    xor r9, r9
-    push 0
+    ;xor r9, r9
     call WriteConsoleA
-    ; add esp, 4
-    add rsp, 8
+    add rsp, 48
     ret
 CONOUT endp
 
 MAIN proc
+    int 3
     sub rsp, 28h                ; Some stack?
+    ;call AllocConsole
     lea rcx, hello
-    mov rdx, 7
+    mov rdx, 3
     call CONOUT
     ;add rsp, 28h
     xor rcx, rcx                ; return 0

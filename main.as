@@ -5,27 +5,31 @@ EXTRN WriteConsoleA: PROC
 
 .data
     hello db "Hai you", 0
+    bytesWritten dd ?
 
 .code
 
 CONOUT proc
-    sub rsp, 8 ; numberofcarswritten
-    mov r9, rsp
     sub rsp, 40
-    mov r8, rdx
-    mov rdx, rcx
-    mov rcx, -11
+    mov rcx, -11 ; STD_OUTPUT_HANDLE:-11
+    ;HANDLE(i32)
+    ;DWORD(i32)
+    ;HANDLE(rax) GetStdHandle(DWORD nStdHandle(rcx))
     call GetStdHandle
-    ;BOOL WriteConsoleA
+    mov rcx, rax
+    mov r8, rdx
+    lea r9, bytesWritten
+    lea rdx, hello
+    mov rax, 0
+    mov [rsp+32], rax
+    ;BOOL(rax) WriteConsoleA 
     ;(HANDLE  hConsoleOutput(rcx),
     ; VOID* lpBuffer(rdx),
     ; DWORD nNumberOfCharsToWrite(r8),
     ; LPDWORD lpNumberOfCharsWritten(r9),
     ; LPVOID lpReserved)
-    mov rcx, rax
-    ;xor r9, r9
     call WriteConsoleA
-    add rsp, 48
+    add rsp, 40
     ret
 CONOUT endp
 

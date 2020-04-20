@@ -4,8 +4,8 @@ EXTRN GetStdHandle: PROC
 EXTRN WriteConsoleA: PROC
 
 .data
-    hello db "Hai you", 0
-    bytesWritten dd ?
+    hello db "Hai you", 0       ;DB; DoubleWord 4 bytes
+    bytesWritten dq ?           ;DQ: Quadword 8 bytes
 
 .code
 
@@ -34,11 +34,12 @@ CONOUT proc
 CONOUT endp
 
 MAIN proc
-    int 3
+    ;int 3                       ; Debug Break
     sub rsp, 28h                ; Some stack?
+    ;BOOL(rax) AllocConsole(void);
     ;call AllocConsole
     lea rcx, hello
-    mov rdx, 3
+    mov rdx, 7
     call CONOUT
     ;add rsp, 28h
     xor rcx, rcx                ; return 0
